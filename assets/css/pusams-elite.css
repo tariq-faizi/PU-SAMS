@@ -1,0 +1,1055 @@
+/* ===========================================================
+   PUSAMS — ELITE DESIGN LAYER (v1.0)
+   د سیستم وروستی ښایسته/پروفیشنل ډیزین پرت
+   - یوازې ډیزین/ښکلا - هیڅ منطق نه ورانوي
+   - د لوګین فورم پر هغه نه اغیزه کوي
+   - وروستی لوډ کیږي ترڅو ټول رنګونه/ساتر/ګریډینټونه واکمن شي
+   =========================================================== */
+
+:root{
+  /* Elite Palette - Royal Indigo / Cyan / Gold */
+  --el-primary:        #4338ca;
+  --el-primary-2:      #6366f1;
+  --el-primary-3:      #8b5cf6;
+  --el-accent:         #06b6d4;
+  --el-accent-2:       #0ea5e9;
+  --el-gold:           #f59e0b;
+  --el-emerald:        #10b981;
+  --el-rose:           #f43f5e;
+
+  /* Surfaces */
+  --el-bg:             #eef1f9;
+  --el-bg-2:           #e6ebf7;
+  --el-surface:        #ffffff;
+  --el-surface-2:      #f8faff;
+  --el-border:         #e2e6f1;
+  --el-border-soft:    #edf0f8;
+
+  /* Sidebar — premium midnight indigo */
+  --el-side-1:         #0b1226;
+  --el-side-2:         #131c3a;
+  --el-side-3:         #1a2347;
+  --el-side-text:      #c9d2ee;
+  --el-side-text-soft: #8a96bd;
+  --el-side-active-bg: linear-gradient(135deg, rgba(99,102,241,.22), rgba(6,182,212,.18));
+  --el-side-glow:      0 0 0 1px rgba(139,92,246,.35), 0 8px 24px rgba(67,56,202,.35);
+
+  /* Gradients */
+  --el-grad-primary:   linear-gradient(135deg,#4338ca 0%,#6366f1 50%,#06b6d4 100%);
+  --el-grad-aurora:    linear-gradient(135deg,#6366f1 0%,#8b5cf6 50%,#06b6d4 100%);
+  --el-grad-royal:     linear-gradient(135deg,#312e81 0%,#4338ca 50%,#7c3aed 100%);
+  --el-grad-emerald:   linear-gradient(135deg,#059669 0%,#10b981 60%,#34d399 100%);
+  --el-grad-amber:     linear-gradient(135deg,#d97706 0%,#f59e0b 60%,#fbbf24 100%);
+  --el-grad-rose:      linear-gradient(135deg,#be123c 0%,#f43f5e 60%,#fb7185 100%);
+  --el-grad-sky:       linear-gradient(135deg,#0369a1 0%,#0ea5e9 60%,#38bdf8 100%);
+  --el-grad-card-head: linear-gradient(180deg,#ffffff 0%,#f5f7fe 100%);
+
+  /* Shadows */
+  --el-shadow-xs:      0 1px 2px rgba(17,24,39,.04);
+  --el-shadow-sm:      0 2px 8px rgba(17,24,39,.06), 0 1px 2px rgba(17,24,39,.04);
+  --el-shadow-md:      0 10px 30px rgba(17,24,39,.10), 0 4px 10px rgba(17,24,39,.05);
+  --el-shadow-lg:      0 24px 60px rgba(17,24,39,.16), 0 8px 18px rgba(17,24,39,.08);
+  --el-shadow-glow:    0 10px 32px rgba(99,102,241,.30);
+
+  /* Motion */
+  --el-ease:           cubic-bezier(.22,1,.36,1);
+  --el-fast:           .18s var(--el-ease);
+  --el-base:           .28s var(--el-ease);
+  --el-slow:           .5s  var(--el-ease);
+
+  /* Radii */
+  --el-r-xs: 8px;
+  --el-r-sm: 12px;
+  --el-r:    16px;
+  --el-r-lg: 22px;
+  --el-r-xl: 30px;
+  --el-r-pill: 999px;
+}
+
+/* ===========================================================
+   1) GLOBAL BACKGROUND — ښکلی نرم پروفیشنل بیګرونډ
+   په ټولو پاڼو کې له لوګین وروسته
+   =========================================================== */
+body:not(.page-login){
+  background:
+    radial-gradient(1100px 600px at -8% -10%, rgba(99,102,241,.10), transparent 60%),
+    radial-gradient(900px 600px at 110% -10%, rgba(6,182,212,.10), transparent 60%),
+    radial-gradient(900px 600px at 50% 120%, rgba(139,92,246,.08), transparent 60%),
+    linear-gradient(180deg, #eef1f9 0%, #e6ebf7 100%) !important;
+  background-attachment: fixed !important;
+  color:#0f172a;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-feature-settings: "ss01","tnum";
+}
+
+/* Subtle pattern overlay across the app (not on login) */
+body:not(.page-login)::before{
+  content:"";
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-image:
+    radial-gradient(rgba(99,102,241,.06) 1px, transparent 1.5px);
+  background-size: 26px 26px;
+  mask-image: linear-gradient(180deg, rgba(0,0,0,.7), rgba(0,0,0,.25) 60%, rgba(0,0,0,0));
+  -webkit-mask-image: linear-gradient(180deg, rgba(0,0,0,.7), rgba(0,0,0,.25) 60%, rgba(0,0,0,0));
+}
+body:not(.page-login) .main-wrapper,
+body:not(.page-login) .sidebar,
+body:not(.page-login) .topbar{ position: relative; z-index: 1; }
+
+/* Dark mode override */
+body.dark-mode:not(.page-login){
+  background:
+    radial-gradient(1100px 600px at -8% -10%, rgba(99,102,241,.12), transparent 60%),
+    radial-gradient(900px 600px at 110% -10%, rgba(6,182,212,.10), transparent 60%),
+    linear-gradient(180deg, #0a1024 0%, #0b1430 100%) !important;
+  color:#e2e8f0;
+}
+
+/* ===========================================================
+   2) SIDEBAR — Premium midnight + gold accent
+   =========================================================== */
+.sidebar{
+  background: linear-gradient(180deg, var(--el-side-1) 0%, var(--el-side-2) 55%, var(--el-side-3) 100%) !important;
+  border-right: 0 !important;
+  box-shadow: 8px 0 32px rgba(11,18,38,.28);
+  position: fixed;
+}
+[dir=rtl] .sidebar{
+  box-shadow: -8px 0 32px rgba(11,18,38,.28);
+  border-left: 0 !important;
+}
+.sidebar::before{
+  content:"";
+  position:absolute; inset:0;
+  background:
+    radial-gradient(700px 220px at 50% -10%, rgba(99,102,241,.30), transparent 70%),
+    radial-gradient(500px 180px at 50% 110%, rgba(6,182,212,.20), transparent 70%);
+  pointer-events:none;
+}
+.sidebar > *{ position: relative; z-index: 1; }
+
+.sidebar-header{
+  padding: 18px 18px !important;
+  border-bottom: 1px solid rgba(255,255,255,.07) !important;
+  background: linear-gradient(180deg, rgba(99,102,241,.10), transparent);
+}
+.sidebar-logo{ gap: 12px; }
+.sidebar-brand-logo,
+.sidebar-logo img{
+  width: 40px; height: 40px;
+  border-radius: 12px;
+  padding: 4px;
+  background: linear-gradient(135deg, rgba(255,255,255,.12), rgba(255,255,255,.04));
+  box-shadow: 0 6px 18px rgba(99,102,241,.35), inset 0 0 0 1px rgba(255,255,255,.10);
+}
+.sidebar-brand-text strong{
+  background: linear-gradient(90deg,#a5b4fc 0%,#67e8f9 60%,#fcd34d 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent !important;
+  font-weight: 800;
+  letter-spacing: .4px;
+  font-size: 1.05rem;
+}
+.sidebar-brand-text small{
+  color: #94a3b8 !important;
+  font-weight: 500;
+}
+
+.sidebar-user{
+  margin: 12px 14px;
+  padding: 12px 14px !important;
+  border-radius: 14px;
+  background: linear-gradient(135deg, rgba(99,102,241,.16), rgba(6,182,212,.08));
+  border: 1px solid rgba(255,255,255,.08) !important;
+  box-shadow: 0 6px 18px rgba(0,0,0,.18) inset;
+}
+.sidebar-avatar{
+  width: 46px !important; height: 46px !important;
+  border: 2px solid transparent !important;
+  background:
+    linear-gradient(#0b1226,#0b1226) padding-box,
+    linear-gradient(135deg,#6366f1,#06b6d4,#f59e0b) border-box;
+  box-shadow: 0 6px 18px rgba(99,102,241,.45);
+}
+.sidebar-username{
+  color: #f1f5f9 !important;
+  font-weight: 700 !important;
+  font-size: .92rem !important;
+}
+.sidebar-role{
+  background: linear-gradient(135deg,#6366f1,#06b6d4) !important;
+  border: 0 !important;
+  padding: 3px 9px !important;
+  font-size: .65rem !important;
+  font-weight: 700 !important;
+  letter-spacing: .4px;
+  box-shadow: 0 4px 10px rgba(99,102,241,.35);
+}
+
+.sidebar-category{
+  color: #8a96bd !important;
+  font-size: 11px !important;
+  font-weight: 800 !important;
+  letter-spacing: 1.2px !important;
+  text-transform: uppercase;
+  padding: 16px 22px 6px !important;
+  position: relative;
+}
+.sidebar-category::before{
+  content:"";
+  display:inline-block;
+  width:14px; height:2px;
+  background: linear-gradient(90deg,#6366f1,#06b6d4);
+  border-radius: 2px;
+  margin-inline-end: 8px;
+  vertical-align: middle;
+}
+
+.sidebar-item{
+  position: relative;
+  margin: 3px 12px;
+  padding: 11px 14px !important;
+  border-radius: 12px !important;
+  color: var(--el-side-text) !important;
+  font-weight: 600 !important;
+  font-size: .9rem !important;
+  transition: all var(--el-base);
+  overflow: hidden;
+}
+.sidebar-item i{
+  width: 24px;
+  height: 24px;
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  background: rgba(255,255,255,.05);
+  color: #a5b4fc;
+  font-size: .95rem;
+  transition: all var(--el-base);
+}
+.sidebar-item:hover{
+  background: rgba(99,102,241,.14) !important;
+  color: #ffffff !important;
+  transform: translateX(2px);
+}
+[dir=rtl] .sidebar-item:hover{ transform: translateX(-2px); }
+.sidebar-item:hover i{
+  background: linear-gradient(135deg,#6366f1,#06b6d4);
+  color: #fff;
+  box-shadow: 0 6px 14px rgba(99,102,241,.35);
+}
+.sidebar-item.active{
+  background: var(--el-side-active-bg) !important;
+  color: #ffffff !important;
+  border: 0 !important;
+  box-shadow: var(--el-side-glow);
+}
+.sidebar-item.active::before{
+  content:"";
+  position:absolute;
+  top: 8px; bottom: 8px;
+  inset-inline-start: -12px;
+  width: 4px;
+  border-radius: 0 4px 4px 0;
+  background: linear-gradient(180deg,#a78bfa,#22d3ee);
+  box-shadow: 0 0 10px rgba(99,102,241,.7);
+}
+[dir=rtl] .sidebar-item.active::before{ border-radius: 4px 0 0 4px; }
+.sidebar-item.active i{
+  background: linear-gradient(135deg,#6366f1,#06b6d4) !important;
+  color: #fff !important;
+  box-shadow: 0 6px 14px rgba(99,102,241,.45);
+}
+
+/* Sidebar scrollbar */
+.sidebar-nav::-webkit-scrollbar{ width:6px; }
+.sidebar-nav::-webkit-scrollbar-thumb{
+  background: linear-gradient(180deg,#6366f1,#06b6d4);
+  border-radius: 999px;
+}
+
+/* ===========================================================
+   3) TOPBAR — Glassmorphism premium
+   =========================================================== */
+.topbar{
+  background: rgba(255,255,255,.78) !important;
+  backdrop-filter: blur(14px) saturate(160%);
+  -webkit-backdrop-filter: blur(14px) saturate(160%);
+  border-bottom: 1px solid rgba(226,230,241,.7) !important;
+  box-shadow: 0 4px 18px rgba(17,24,39,.06) !important;
+  height: 64px !important;
+}
+body.dark-mode .topbar{
+  background: rgba(15,23,42,.78) !important;
+  border-bottom-color: rgba(51,65,85,.6) !important;
+}
+.topbar-title{
+  font-weight: 800 !important;
+  font-size: 1.1rem !important;
+  background: linear-gradient(90deg,#4338ca,#0ea5e9);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent !important;
+  letter-spacing: -.2px;
+}
+.topbar-toggle{
+  width: 38px; height: 38px;
+  border-radius: 10px !important;
+  background: linear-gradient(135deg,#eef2ff,#e0f2fe) !important;
+  color: #4338ca !important;
+  transition: all var(--el-base);
+}
+.topbar-toggle:hover{
+  transform: scale(1.06);
+  box-shadow: 0 8px 18px rgba(99,102,241,.25);
+}
+
+/* Topbar action buttons */
+.topbar-actions .btn{
+  border-radius: 10px !important;
+  font-weight: 600 !important;
+  height: 38px;
+  border: 1px solid rgba(226,230,241,.9) !important;
+  background: #ffffff !important;
+  color: #475569 !important;
+  transition: all var(--el-base);
+}
+.topbar-actions .btn:hover{
+  border-color: #c7d2fe !important;
+  background: #eef2ff !important;
+  color: #4338ca !important;
+  transform: translateY(-1px);
+  box-shadow: 0 8px 18px rgba(99,102,241,.18);
+}
+.topbar-actions .btn.dropdown-toggle::after{ margin-inline-start: .4em; }
+
+.pusams-live-pill{
+  background: var(--el-grad-emerald) !important;
+  border: 0 !important;
+  padding: 6px 12px !important;
+  border-radius: 999px !important;
+  font-weight: 700 !important;
+  letter-spacing: .4px;
+  box-shadow: 0 6px 16px rgba(16,185,129,.30);
+}
+.pusams-live-blink{
+  width: 8px; height: 8px;
+  background: #fff;
+  border-radius: 50%;
+  display: inline-block;
+  box-shadow: 0 0 0 0 rgba(255,255,255,.9);
+  animation: el-pulse 1.6s infinite;
+}
+@keyframes el-pulse{
+  0%   { box-shadow: 0 0 0 0 rgba(255,255,255,.9); }
+  70%  { box-shadow: 0 0 0 10px rgba(255,255,255,0); }
+  100% { box-shadow: 0 0 0 0 rgba(255,255,255,0); }
+}
+
+/* Notification badge */
+.notif-badge{
+  background: var(--el-grad-rose) !important;
+  border: 2px solid #fff !important;
+  box-shadow: 0 4px 10px rgba(244,63,94,.35);
+}
+
+/* ===========================================================
+   4) DROPDOWNS — Refined glass
+   =========================================================== */
+.dropdown-menu{
+  border: 1px solid rgba(226,230,241,.9) !important;
+  border-radius: 14px !important;
+  box-shadow: 0 20px 50px rgba(17,24,39,.14) !important;
+  padding: 6px !important;
+  backdrop-filter: blur(8px);
+  background: rgba(255,255,255,.98) !important;
+}
+.dropdown-item{
+  border-radius: 9px !important;
+  padding: 9px 12px !important;
+  font-weight: 500;
+  transition: all var(--el-fast);
+}
+.dropdown-item:hover{
+  background: linear-gradient(135deg,#eef2ff,#e0f2fe) !important;
+  color: #4338ca !important;
+  transform: translateX(2px);
+}
+[dir=rtl] .dropdown-item:hover{ transform: translateX(-2px); }
+.dropdown-item.text-danger:hover{
+  background: linear-gradient(135deg,#fef2f2,#fee2e2) !important;
+  color: #be123c !important;
+}
+body.dark-mode .dropdown-menu{
+  background: rgba(15,23,42,.96) !important;
+  border-color: rgba(51,65,85,.7) !important;
+}
+
+/* ===========================================================
+   5) CARDS — Elite white surface with depth
+   =========================================================== */
+.card{
+  border: 1px solid var(--el-border) !important;
+  border-radius: var(--el-r) !important;
+  box-shadow: var(--el-shadow-sm) !important;
+  background: #ffffff !important;
+  overflow: hidden;
+  transition: all var(--el-base);
+}
+.card:hover{
+  box-shadow: var(--el-shadow-md) !important;
+  transform: translateY(-2px);
+}
+.card-header{
+  background: var(--el-grad-card-head) !important;
+  border-bottom: 1px solid var(--el-border) !important;
+  padding: 16px 20px !important;
+  font-weight: 800 !important;
+  font-size: 1rem !important;
+  letter-spacing: .1px;
+  color: #1e293b !important;
+  position: relative;
+}
+.card-header::before{
+  content:"";
+  position:absolute;
+  inset-inline-start: 0;
+  top: 14px; bottom: 14px;
+  width: 4px;
+  border-radius: 0 4px 4px 0;
+  background: var(--el-grad-primary);
+}
+[dir=rtl] .card-header::before{ border-radius: 4px 0 0 4px; }
+
+body.dark-mode .card{
+  background: linear-gradient(180deg,#162038,#111a2e) !important;
+  border-color: #243049 !important;
+}
+body.dark-mode .card-header{
+  background: linear-gradient(180deg,#1a2540,#152038) !important;
+  border-color: #243049 !important;
+  color: #f1f5f9 !important;
+}
+
+/* ===========================================================
+   6) HERO / WELCOME — Aurora glass
+   =========================================================== */
+.hub-hero,
+.welcome-hero,
+.dashboard-hero{
+  border-radius: var(--el-r-lg) !important;
+  padding: 1.9rem 2rem !important;
+  color: #fff !important;
+  background:
+    linear-gradient(135deg, rgba(67,56,202,.92) 0%, rgba(99,102,241,.88) 45%, rgba(6,182,212,.86) 100%),
+    radial-gradient(800px 300px at 100% 0%, rgba(245,158,11,.30), transparent 60%) !important;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 20px 50px rgba(67,56,202,.30) !important;
+  margin-bottom: 1.4rem;
+  border: 1px solid rgba(255,255,255,.18);
+}
+.hub-hero::before{
+  content:"";
+  position:absolute; inset:0;
+  background:
+    radial-gradient(450px 200px at 12% 110%, rgba(255,255,255,.18), transparent 60%),
+    radial-gradient(380px 180px at 90% -10%, rgba(255,255,255,.20), transparent 60%);
+  pointer-events:none;
+}
+.hub-hero::after{
+  content:"";
+  position:absolute;
+  right:-80px; top:-80px;
+  width:280px; height:280px;
+  border-radius:50%;
+  background: rgba(255,255,255,.10);
+  filter: blur(2px);
+}
+[dir=rtl] .hub-hero::after{ right:auto; left:-80px; }
+.hub-hero > *{ position: relative; z-index: 1; }
+
+.hub-hero-title{
+  font-size: 1.7rem !important;
+  font-weight: 800 !important;
+  margin-bottom: .35rem !important;
+  text-shadow: 0 2px 12px rgba(0,0,0,.18);
+  display: flex; align-items: center; gap: 14px;
+}
+.hub-hero-icon{
+  width: 56px; height: 56px;
+  display: inline-flex; align-items: center; justify-content: center;
+  border-radius: 16px;
+  background: linear-gradient(135deg, rgba(255,255,255,.22), rgba(255,255,255,.08));
+  backdrop-filter: blur(6px);
+  border: 1px solid rgba(255,255,255,.28);
+  font-size: 1.7rem;
+  box-shadow: 0 10px 24px rgba(0,0,0,.18);
+}
+.hub-hero-sub{
+  opacity: .95 !important;
+  font-size: 1rem;
+  margin-bottom: 1rem !important;
+}
+.hub-hero-chip{
+  display: inline-flex !important;
+  align-items: center;
+  gap: 8px !important;
+  padding: 7px 14px !important;
+  border-radius: 999px !important;
+  background: rgba(255,255,255,.18) !important;
+  border: 1px solid rgba(255,255,255,.28);
+  backdrop-filter: blur(6px);
+  font-size: .85rem !important;
+  font-weight: 600;
+  margin-inline-end: 6px;
+  margin-bottom: 4px;
+  box-shadow: 0 4px 10px rgba(0,0,0,.10);
+}
+
+/* ===========================================================
+   7) STAT / KPI CARDS — Gradient hero tiles
+   =========================================================== */
+.stat-card, .kpi-card, .summary-card{
+  border-radius: var(--el-r) !important;
+  padding: 20px !important;
+  background: #ffffff !important;
+  border: 1px solid var(--el-border) !important;
+  box-shadow: var(--el-shadow-sm) !important;
+  position: relative;
+  overflow: hidden;
+  transition: all var(--el-base);
+}
+.stat-card::before, .kpi-card::before, .summary-card::before{
+  content:"";
+  position:absolute;
+  inset-inline-start: 0; top: 0; bottom: 0;
+  width: 5px;
+  background: var(--el-grad-primary);
+}
+.stat-card.success::before, .kpi-card.success::before{ background: var(--el-grad-emerald); }
+.stat-card.warning::before, .kpi-card.warning::before{ background: var(--el-grad-amber); }
+.stat-card.danger::before,  .kpi-card.danger::before { background: var(--el-grad-rose); }
+.stat-card.info::before,    .kpi-card.info::before   { background: var(--el-grad-sky); }
+.stat-card:hover, .kpi-card:hover, .summary-card:hover{
+  box-shadow: var(--el-shadow-md) !important;
+  transform: translateY(-3px);
+}
+.stat-card::after, .kpi-card::after{
+  content:"";
+  position:absolute;
+  right:-30px; bottom:-30px;
+  width: 130px; height: 130px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(99,102,241,.10), transparent 70%);
+  pointer-events: none;
+}
+[dir=rtl] .stat-card::after, [dir=rtl] .kpi-card::after{ right:auto; left:-30px; }
+
+/* Pre-existing colored stat cards (gradient backgrounds) — enhance */
+.stat-card-primary{ background: var(--el-grad-primary) !important; color:#fff !important; border:0 !important; box-shadow: 0 14px 34px rgba(99,102,241,.30) !important; }
+.stat-card-success{ background: var(--el-grad-emerald) !important; color:#fff !important; border:0 !important; box-shadow: 0 14px 34px rgba(16,185,129,.30) !important; }
+.stat-card-warning{ background: var(--el-grad-amber) !important; color:#fff !important; border:0 !important; box-shadow: 0 14px 34px rgba(245,158,11,.30) !important; }
+.stat-card-danger { background: var(--el-grad-rose) !important; color:#fff !important; border:0 !important; box-shadow: 0 14px 34px rgba(244,63,94,.30) !important; }
+.stat-card-info   { background: var(--el-grad-sky) !important; color:#fff !important; border:0 !important; box-shadow: 0 14px 34px rgba(14,165,233,.30) !important; }
+.stat-card-primary::before, .stat-card-success::before,
+.stat-card-warning::before, .stat-card-danger::before,
+.stat-card-info::before{ display:none; }
+
+.stat-card .stat-value,
+.kpi-card  .kpi-value,
+.stat-card .stat-number{
+  font-size: 2rem !important;
+  font-weight: 800 !important;
+  letter-spacing: -.5px;
+  line-height: 1.05;
+}
+.stat-card .stat-label,
+.kpi-card  .kpi-label{
+  font-size: .82rem !important;
+  font-weight: 600;
+  letter-spacing: .3px;
+  opacity: .9;
+}
+.stat-card .stat-icon{
+  font-size: 2.6rem !important;
+  opacity: .22 !important;
+}
+
+/* ===========================================================
+   8) BUTTONS — Polished gradient buttons
+   =========================================================== */
+.btn{
+  border-radius: 11px !important;
+  font-weight: 600 !important;
+  letter-spacing: .2px;
+  transition: all var(--el-base) !important;
+  border-width: 1.5px;
+}
+.btn:active{ transform: translateY(1px); }
+.btn-primary{
+  background: var(--el-grad-primary) !important;
+  border: 0 !important;
+  color: #fff !important;
+  box-shadow: 0 8px 20px rgba(99,102,241,.30) !important;
+}
+.btn-primary:hover{
+  filter: brightness(1.06);
+  transform: translateY(-1px);
+  box-shadow: 0 12px 26px rgba(99,102,241,.40) !important;
+}
+.btn-success{
+  background: var(--el-grad-emerald) !important; border:0 !important; color:#fff !important;
+  box-shadow: 0 8px 18px rgba(16,185,129,.28) !important;
+}
+.btn-danger{
+  background: var(--el-grad-rose) !important; border:0 !important; color:#fff !important;
+  box-shadow: 0 8px 18px rgba(244,63,94,.28) !important;
+}
+.btn-warning{
+  background: var(--el-grad-amber) !important; border:0 !important; color:#fff !important;
+  box-shadow: 0 8px 18px rgba(245,158,11,.28) !important;
+}
+.btn-info{
+  background: var(--el-grad-sky) !important; border:0 !important; color:#fff !important;
+  box-shadow: 0 8px 18px rgba(14,165,233,.28) !important;
+}
+.btn-success:hover,.btn-danger:hover,.btn-warning:hover,.btn-info:hover{
+  filter: brightness(1.06);
+  transform: translateY(-1px);
+  color:#fff !important;
+}
+.btn-outline-primary{
+  border: 1.5px solid #c7d2fe !important;
+  color: #4338ca !important;
+  background: #ffffff !important;
+}
+.btn-outline-primary:hover{
+  background: var(--el-grad-primary) !important;
+  border-color: transparent !important;
+  color:#fff !important;
+}
+.btn-outline-secondary{
+  border: 1.5px solid var(--el-border) !important;
+  color: #475569 !important;
+  background: #ffffff !important;
+}
+.btn-outline-secondary:hover{
+  background: #eef2ff !important;
+  border-color: #c7d2fe !important;
+  color: #4338ca !important;
+}
+
+/* ===========================================================
+   9) TABLES — Premium readability
+   =========================================================== */
+.table{
+  --bs-table-bg: transparent;
+  border-collapse: separate;
+  border-spacing: 0;
+}
+.table-responsive{
+  border-radius: var(--el-r-sm);
+  border: 1px solid var(--el-border);
+  background: #ffffff;
+  overflow: hidden;
+  box-shadow: var(--el-shadow-xs);
+}
+.table thead th{
+  background: linear-gradient(180deg,#eef2ff 0%,#e0e7ff 100%) !important;
+  color: #312e81 !important;
+  font-weight: 800 !important;
+  font-size: .92rem !important;
+  letter-spacing: .2px !important;
+  text-transform: none !important;
+  padding: 14px 16px !important;
+  border-bottom: 2px solid #818cf8 !important;
+  white-space: nowrap;
+}
+.table tbody td{
+  padding: 13px 16px !important;
+  vertical-align: middle;
+  border-bottom: 1px solid #f1f3fa !important;
+  font-size: .92rem;
+}
+.table tbody tr{ transition: background var(--el-fast); }
+.table-hover tbody tr:hover,
+.table tbody tr:hover{
+  background: linear-gradient(90deg,#eef2ff,#e0f2fe) !important;
+}
+.table tbody tr:last-child td{ border-bottom: 0 !important; }
+
+body.dark-mode .table thead th{
+  background: linear-gradient(180deg,#1a2540,#101a30) !important;
+  color: #c7d2fe !important;
+  border-bottom-color: #6366f1 !important;
+}
+body.dark-mode .table tbody td{
+  border-bottom-color: #243049 !important;
+  color: #e2e8f0;
+}
+body.dark-mode .table-hover tbody tr:hover{
+  background: rgba(99,102,241,.10) !important;
+}
+
+/* ===========================================================
+   10) FORM CONTROLS
+   =========================================================== */
+.form-control,
+.form-select{
+  border-radius: 11px !important;
+  border: 1.5px solid var(--el-border) !important;
+  padding: .6rem .9rem !important;
+  font-size: .94rem;
+  transition: all var(--el-base);
+  background: #ffffff;
+}
+.form-control:hover,
+.form-select:hover{ border-color: #c7d2fe !important; }
+.form-control:focus,
+.form-select:focus{
+  border-color: #6366f1 !important;
+  box-shadow: 0 0 0 .22rem rgba(99,102,241,.18) !important;
+}
+.form-label{
+  font-weight: 700 !important;
+  color: #334155 !important;
+  font-size: .9rem;
+  margin-bottom: .35rem;
+}
+.input-group-text{
+  background: linear-gradient(135deg,#eef2ff,#e0f2fe) !important;
+  border: 1.5px solid var(--el-border) !important;
+  color: #4338ca !important;
+  font-weight: 600;
+  border-radius: 11px !important;
+}
+
+/* ===========================================================
+   11) BADGES & PILLS
+   =========================================================== */
+.badge{
+  font-weight: 700 !important;
+  letter-spacing: .3px;
+  padding: .42em .75em !important;
+  border-radius: 8px !important;
+}
+.badge.bg-primary{ background: var(--el-grad-primary) !important; }
+.badge.bg-success{ background: var(--el-grad-emerald) !important; }
+.badge.bg-danger { background: var(--el-grad-rose) !important; }
+.badge.bg-warning{ background: var(--el-grad-amber) !important; color:#fff !important; }
+.badge.bg-info   { background: var(--el-grad-sky) !important; color:#fff !important; }
+.badge.bg-secondary{ background: linear-gradient(135deg,#64748b,#94a3b8) !important; }
+
+.status-pill{
+  padding: .3rem .75rem !important;
+  font-weight: 700 !important;
+  border-radius: 999px !important;
+  font-size: .78rem;
+}
+.status-pill.live{ background: linear-gradient(135deg,#bbf7d0,#86efac) !important; color:#065f46 !important; box-shadow: 0 4px 10px rgba(16,185,129,.20); }
+.status-pill.pending{ background: linear-gradient(135deg,#fde68a,#fcd34d) !important; color:#78350f !important; }
+.status-pill.closed{ background: linear-gradient(135deg,#e5e7eb,#cbd5e1) !important; color:#1f2937 !important; }
+.status-pill.missed{ background: linear-gradient(135deg,#fecaca,#fca5a5) !important; color:#7f1d1d !important; }
+
+/* ===========================================================
+   12) ALERTS
+   =========================================================== */
+.alert{
+  border: 0 !important;
+  border-inline-start: 5px solid !important;
+  border-radius: 12px !important;
+  padding: 14px 18px !important;
+  box-shadow: var(--el-shadow-xs);
+  font-weight: 500;
+}
+.alert-success{ background: linear-gradient(135deg,#ecfdf5,#d1fae5) !important; border-color: #10b981 !important; color: #065f46 !important; }
+.alert-warning{ background: linear-gradient(135deg,#fffbeb,#fef3c7) !important; border-color: #f59e0b !important; color: #78350f !important; }
+.alert-danger { background: linear-gradient(135deg,#fef2f2,#fee2e2) !important; border-color: #f43f5e !important; color: #7f1d1d !important; }
+.alert-info   { background: linear-gradient(135deg,#eff6ff,#dbeafe) !important; border-color: #0ea5e9 !important; color: #075985 !important; }
+
+/* ===========================================================
+   13) PAGE HEADER / TITLE
+   =========================================================== */
+.page-title,
+.page-header h1,
+.page-header h2,
+.content-header h1{
+  font-weight: 900 !important;
+  font-size: 1.75rem !important;
+  letter-spacing: -.4px !important;
+  background: linear-gradient(90deg,#312e81,#4338ca 50%,#0ea5e9);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent !important;
+  margin-bottom: .25rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+}
+.page-subtitle,
+.page-header p{
+  color: #64748b !important;
+  font-size: .95rem;
+  font-weight: 500;
+}
+
+/* ===========================================================
+   14) PAGINATION
+   =========================================================== */
+.pagination .page-link{
+  border-radius: 10px !important;
+  margin: 0 3px;
+  border: 1px solid var(--el-border) !important;
+  color: #4338ca !important;
+  font-weight: 600;
+  min-width: 38px;
+  text-align: center;
+  transition: all var(--el-fast);
+}
+.pagination .page-link:hover{
+  background: #eef2ff !important;
+  border-color: #c7d2fe !important;
+  transform: translateY(-1px);
+}
+.pagination .page-item.active .page-link{
+  background: var(--el-grad-primary) !important;
+  border-color: transparent !important;
+  color:#fff !important;
+  box-shadow: 0 6px 14px rgba(99,102,241,.30);
+}
+
+/* ===========================================================
+   15) CLUSTER/HUB CARDS
+   =========================================================== */
+.ros-cluster-card,
+.cluster-card,
+.hub-card{
+  border-radius: var(--el-r) !important;
+  border: 1px solid var(--el-border) !important;
+  background: #ffffff !important;
+  padding: 1.2rem 1.3rem !important;
+  box-shadow: var(--el-shadow-sm) !important;
+  transition: all var(--el-base);
+  position: relative;
+  overflow: hidden;
+}
+.ros-cluster-card::before,
+.cluster-card::before,
+.hub-card::before{
+  content:"";
+  position:absolute;
+  inset-inline-start: 0; top:0; bottom:0;
+  width:4px;
+  background: var(--el-grad-aurora);
+  opacity: .9;
+}
+.ros-cluster-card:hover,
+.cluster-card:hover,
+.hub-card:hover{
+  transform: translateY(-3px);
+  box-shadow: var(--el-shadow-md) !important;
+  border-color: #c7d2fe !important;
+}
+
+/* ===========================================================
+   16) LIVE ATTENDANCE BANNER
+   =========================================================== */
+.live-att-banner{
+  border-radius: var(--el-r) !important;
+  padding: 1.1rem 1.3rem !important;
+  border: 0 !important;
+  border-inline-start: 5px solid var(--el-accent-2) !important;
+  background: linear-gradient(135deg,#eff6ff,#dbeafe) !important;
+  box-shadow: var(--el-shadow-sm) !important;
+}
+.live-att-banner.state-live{
+  background: linear-gradient(135deg,#ecfdf5,#d1fae5) !important;
+  border-inline-start-color: #10b981 !important;
+}
+.live-att-banner.state-pending{
+  background: linear-gradient(135deg,#fffbeb,#fef3c7) !important;
+  border-inline-start-color: #f59e0b !important;
+}
+.live-att-banner.state-missed{
+  background: linear-gradient(135deg,#fef2f2,#fee2e2) !important;
+  border-inline-start-color: #f43f5e !important;
+}
+.lab-time{
+  font-size: 1.55rem !important;
+  font-weight: 800 !important;
+  background: linear-gradient(90deg,#4338ca,#0ea5e9);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* ===========================================================
+   17) MODAL — Premium
+   =========================================================== */
+.modal-content{
+  border: 0 !important;
+  border-radius: var(--el-r-lg) !important;
+  box-shadow: 0 32px 80px rgba(17,24,39,.30) !important;
+  overflow: hidden;
+}
+.modal-header{
+  background: var(--el-grad-primary) !important;
+  color: #fff !important;
+  border: 0 !important;
+  padding: 16px 22px !important;
+}
+.modal-header .modal-title{
+  font-weight: 800 !important;
+  letter-spacing: .2px;
+}
+.modal-header .btn-close{
+  filter: brightness(0) invert(1);
+  opacity: .85;
+}
+.modal-footer{
+  border-top: 1px solid var(--el-border) !important;
+  padding: 14px 20px !important;
+}
+
+/* ===========================================================
+   18) PROGRESS / TABS / MISC
+   =========================================================== */
+.progress{
+  height: 10px !important;
+  border-radius: 999px !important;
+  background: #eef2ff !important;
+  overflow: hidden;
+}
+.progress-bar{
+  background: var(--el-grad-primary) !important;
+  border-radius: 999px;
+}
+.nav-tabs{
+  border-bottom: 2px solid var(--el-border) !important;
+  gap: 4px;
+}
+.nav-tabs .nav-link{
+  border: 0 !important;
+  border-radius: 10px 10px 0 0 !important;
+  color: #64748b !important;
+  font-weight: 700;
+  padding: 10px 16px !important;
+  transition: all var(--el-fast);
+}
+.nav-tabs .nav-link:hover{
+  background: #eef2ff !important;
+  color: #4338ca !important;
+}
+.nav-tabs .nav-link.active{
+  background: #ffffff !important;
+  color: #4338ca !important;
+  box-shadow: inset 0 -3px 0 0 #6366f1;
+}
+.nav-pills .nav-link{
+  border-radius: 10px !important;
+  font-weight: 700;
+  color: #64748b;
+}
+.nav-pills .nav-link.active{
+  background: var(--el-grad-primary) !important;
+  color: #fff !important;
+  box-shadow: 0 6px 14px rgba(99,102,241,.30);
+}
+
+/* ===========================================================
+   19) ICONS — Subtle FontAwesome enhancement
+   =========================================================== */
+.card-header i,
+.page-title i{
+  color: #4338ca;
+}
+.text-primary, .text-info, .text-success, .text-warning, .text-danger{
+  font-weight: 600;
+}
+
+/* ===========================================================
+   20) SCROLLBARS (page-wide)
+   =========================================================== */
+body:not(.page-login)::-webkit-scrollbar{ width: 12px; height: 12px; }
+body:not(.page-login)::-webkit-scrollbar-track{ background: transparent; }
+body:not(.page-login)::-webkit-scrollbar-thumb{
+  background: linear-gradient(180deg,#a5b4fc,#7dd3fc);
+  border-radius: 999px;
+  border: 3px solid transparent;
+  background-clip: padding-box;
+}
+body:not(.page-login)::-webkit-scrollbar-thumb:hover{
+  background: linear-gradient(180deg,#6366f1,#0ea5e9);
+  background-clip: padding-box;
+}
+
+/* ===========================================================
+   21) LOGIN PROTECTION — هیڅ بدلون نه
+   د لوګین فورم په خپل اصلي ډول پاتې کیږي
+   =========================================================== */
+body.page-login{
+  /* leave login as-is — no overrides */
+}
+body.page-login::before{ display:none !important; }
+
+/* ===========================================================
+   22) PRINT
+   =========================================================== */
+@media print{
+  body:not(.page-login)::before{ display:none !important; }
+  .sidebar, .topbar{ display:none !important; }
+  .card{ box-shadow:none !important; border:1px solid #ccc !important; }
+}
+
+/* ===========================================================
+   23) RESPONSIVE TWEAKS
+   =========================================================== */
+@media (max-width: 768px){
+  .hub-hero, .welcome-hero, .dashboard-hero{
+    padding: 1.4rem 1.2rem !important;
+    border-radius: var(--el-r) !important;
+  }
+  .hub-hero-title{ font-size: 1.35rem !important; gap: 10px; }
+  .hub-hero-icon{ width: 44px; height: 44px; font-size: 1.3rem; }
+  .stat-card .stat-value,
+  .kpi-card .kpi-value,
+  .stat-card .stat-number{ font-size: 1.6rem !important; }
+  .page-title, .page-header h1, .page-header h2{ font-size: 1.4rem !important; }
+}
+
+/* ===========================================================
+   24) UTILITIES
+   =========================================================== */
+.el-shine{
+  position: relative;
+  overflow: hidden;
+}
+.el-shine::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  background: linear-gradient(120deg, transparent 30%, rgba(255,255,255,.30) 50%, transparent 70%);
+  transform: translateX(-100%);
+  transition: transform .9s var(--el-ease);
+}
+.el-shine:hover::after{ transform: translateX(100%); }
+
+/* Final body text rendering polish */
+body:not(.page-login) h1,
+body:not(.page-login) h2,
+body:not(.page-login) h3{
+  color: #0f172a;
+  letter-spacing: -.2px;
+}
+body.dark-mode:not(.page-login) h1,
+body.dark-mode:not(.page-login) h2,
+body.dark-mode:not(.page-login) h3{ color:#f1f5f9; }
+
+/* End of pusams-elite.css */

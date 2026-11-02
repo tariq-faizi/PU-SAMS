@@ -1,0 +1,231 @@
+/* =============================================================================
+ *  PUSAMS Layout Fix (FIX 17)
+ * -----------------------------------------------------------------------------
+ *  Goal: re-anchor the global app shell (sidebar + topbar + content) so that
+ *        on every viewport the dashboard sits inside the content area and the
+ *        sidebar menu sits on its own column \u2014 no overlap, no off-grid items.
+ *
+ *  Why this exists:
+ *    The project has accumulated several CSS layers (app-theme, pusams-ui,
+ *    pusams-modern, pusams-ultra, pusams-elite, responsive) that each set
+ *    .main-wrapper margins and .sidebar positions at DIFFERENT breakpoints:
+ *      - app-theme.css     \u2192 mobile breakpoint @ 767.98px
+ *      - responsive.css    \u2192 mobile breakpoint @ 991.98px  (with !important)
+ *    Between 768\u2013991px the sidebar was hidden but main-wrapper still kept
+ *    260px of margin, pushing the dashboard off-grid. That is the source of
+ *    the \"dashboard up here, menu down there\" issue the user reported.
+ *
+ *  This file is loaded LAST in includes/header.php so its rules win without
+ *  us having to edit the other CSS files (safer for backwards compatibility).
+ *  Every selector below is scoped to body:not(.page-login) so the login page
+ *  is left completely untouched.
+ * =============================================================================
+ */
+
+/* ---------- 1. Stable design tokens for the shell ------------------------- */
+:root{
+  --pu-sidebar-w: 260px;
+  --pu-topbar-h:  64px;
+  --pu-shell-bp:  992px;   /* desktop = >= 992px, mobile/tablet = < 992px */
+}
+
+/* ---------- 2. Reset & normalise the page shell --------------------------- */
+body:not(.page-login){
+  /* prevent horizontal scroll caused by stray transforms in other layers */
+  overflow-x: hidden;
+}
+
+/* The sidebar is ALWAYS fixed and full-height. */
+body:not(.page-login) .sidebar{
+  position: fixed !important;
+  top: 0 !important;
+  bottom: 0 !important;
+  height: 100vh !important;
+  width: var(--pu-sidebar-w) !important;
+  z-index: 1040 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  overflow: hidden !important;          /* inner .sidebar-nav scrolls */
+}
+
+/* LTR \u2192 sidebar pinned to the left edge */
+html[dir="ltr"] body:not(.page-login) .sidebar,
+body:not(.page-login)[dir="ltr"] .sidebar{
+  left: 0 !important;
+  right: auto !important;
+}
+/* RTL \u2192 sidebar pinned to the right edge */
+html[dir="rtl"] body:not(.page-login) .sidebar,
+body:not(.page-login)[dir="rtl"] .sidebar,
+[dir="rtl"] body:not(.page-login) .sidebar{
+  right: 0 !important;
+  left: auto !important;
+}
+
+/* Inner scroll behaviour for the nav list */
+body:not(.page-login) .sidebar-nav{
+  flex: 1 1 auto !important;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+}
+
+/* ---------- 3. Main wrapper layout ---------------------------------------- */
+body:not(.page-login) .main-wrapper{
+  min-height: 100vh !important;
+  width: auto !important;
+  transition: margin .25s ease !important;
+  position: relative !important;
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+/* ---------- 4. Topbar sits ABOVE content, sticky ------------------------- */
+body:not(.page-login) .topbar{
+  position: sticky !important;
+  top: 0 !important;
+  z-index: 1030 !important;
+  height: var(--pu-topbar-h) !important;
+  min-height: var(--pu-topbar-h) !important;
+  display: flex !important;
+  align-items: center !important;
+  padding: 0 18px !important;
+  gap: 12px !important;
+  width: 100% !important;
+}
+body:not(.page-login) .topbar-actions{
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  margin-inline-start: auto !important;
+}
+
+/* Main content area below the topbar */
+body:not(.page-login) #flashContainer,
+body:not(.page-login) .page-content{
+  width: 100% !important;
+  max-width: 100% !important;
+}
+
+/* ---------- 5. Desktop ( >= 992px ) \u2014 sidebar visible, content shifted --- */
+@media (min-width: 992px){
+  body:not(.page-login) .sidebar{
+    transform: none !important;          /* defeat mobile translateX(-100%) */
+    visibility: visible !important;
+  }
+  body:not(.page-login) .sidebar-overlay{
+    display: none !important;
+  }
+  body:not(.page-login) .topbar-toggle{
+    display: none !important;            /* desktop hides the hamburger */
+  }
+
+  /* LTR \u2192 push main wrapper to the right of the sidebar */
+  html[dir="ltr"] body:not(.page-login) .main-wrapper,
+  body:not(.page-login)[dir="ltr"] .main-wrapper{
+    margin-left:  var(--pu-sidebar-w) !important;
+    margin-right: 0 !important;
+  }
+  /* RTL \u2192 push main wrapper to the left of the sidebar */
+  html[dir="rtl"] body:not(.page-login) .main-wrapper,
+  body:not(.page-login)[dir="rtl"] .main-wrapper,
+  [dir="rtl"] body:not(.page-login) .main-wrapper{
+    margin-right: var(--pu-sidebar-w) !important;
+    margin-left:  0 !important;
+  }
+}
+
+/* ---------- 6. Mobile / Tablet ( < 992px ) \u2014 sidebar drawer -------------- */
+@media (max-width: 991.98px){
+  body:not(.page-login) .main-wrapper{
+    margin-left:  0 !important;
+    margin-right: 0 !important;
+    width: 100% !important;
+  }
+  body:not(.page-login) .topbar-toggle{
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+  /* Sidebar is hidden off-screen by default; .open / .show reveals it */
+  html[dir="ltr"] body:not(.page-login) .sidebar,
+  body:not(.page-login)[dir="ltr"] .sidebar{
+    transform: translateX(-100%) !important;
+  }
+  html[dir="rtl"] body:not(.page-login) .sidebar,
+  body:not(.page-login)[dir="rtl"] .sidebar,
+  [dir="rtl"] body:not(.page-login) .sidebar{
+    transform: translateX(100%) !important;
+  }
+  body:not(.page-login) .sidebar.open,
+  body:not(.page-login) .sidebar.show{
+    transform: translateX(0) !important;
+  }
+  /* Backdrop while the drawer is open */
+  body:not(.page-login) .sidebar-overlay{
+    position: fixed !important;
+    inset: 0 !important;
+    background: rgba(0,0,0,.45) !important;
+    z-index: 1035 !important;
+    display: none !important;
+  }
+  body:not(.page-login) .sidebar-overlay.show{
+    display: block !important;
+  }
+}
+
+/* ---------- 7. Dashboard grid \u2014 keep cards aligned & wrapping ----------- */
+body:not(.page-login) .container-fluid{
+  padding-left:  1rem !important;
+  padding-right: 1rem !important;
+}
+body:not(.page-login) .row{
+  margin-left:  -.5rem !important;
+  margin-right: -.5rem !important;
+}
+body:not(.page-login) .row > [class*="col-"]{
+  padding-left:  .5rem !important;
+  padding-right: .5rem !important;
+}
+
+/* Dashboard stat cards should never overflow and always stack on small screens */
+body:not(.page-login) .stat-card,
+body:not(.page-login) .v6-stat-card,
+body:not(.page-login) .v7-stat-card,
+body:not(.page-login) .hub-hero-chip{
+  min-width: 0 !important;
+  max-width: 100% !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+
+/* Cards inside the hub-hero / dashboard should not pop above the topbar */
+body:not(.page-login) .dashboard-mono .card,
+body:not(.page-login) .page-content .card{
+  position: relative !important;
+  z-index: 1 !important;
+}
+
+/* ---------- 8. Print safety net ------------------------------------------ */
+@media print{
+  body:not(.page-login) .sidebar,
+  body:not(.page-login) .topbar,
+  body:not(.page-login) .sidebar-overlay{ display: none !important; }
+  body:not(.page-login) .main-wrapper{
+    margin: 0 !important;
+    width: 100% !important;
+  }
+}
+
+/* ---------- 9. Small UX polish \u2014 prevent menu items from breaking ------ */
+body:not(.page-login) .sidebar-item{
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+body:not(.page-login) .sidebar-item span{
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  display: inline-block !important;
+  max-width: calc(var(--pu-sidebar-w) - 70px) !important;
+  vertical-align: middle !important;
+}

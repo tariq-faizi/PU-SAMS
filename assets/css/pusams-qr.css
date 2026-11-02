@@ -1,0 +1,108 @@
+/* ==========================================================================
+   PUSAMS — QR Attendance UI (additive stylesheet)
+   File: assets/css/pusams-qr.css
+
+   Purpose: Isolated styling for the new QR Attendance feature. Every rule
+            is namespaced under .qr-* or a QR-specific #id so it can NEVER
+            override the existing dashboards, roster tables, or hero styles.
+
+   This file is safe to remove — nothing else depends on it.
+   ========================================================================== */
+
+/* ---- Teacher: QR switcher bar (per credit-slot buttons) ---- */
+.qr-att-switcher .card-header      { background: linear-gradient(90deg, #eff6ff 0%, #ffffff 60%); }
+.qr-att-switcher .fw-semibold      { color: #1f2937; }
+.qr-att-switcher .badge            { font-weight: 500; }
+.qr-att-switcher button:disabled   { opacity: .55; cursor: not-allowed; }
+
+/* ---- Live QR modal ---- */
+#qrLiveModal .modal-header         { border-bottom: 0; }
+#qrCanvasBox                       { transition: transform .25s ease; }
+#qrCanvasBox:hover                 { transform: scale(1.02); }
+#qrCanvasBox img,
+#qrCanvasBox canvas                { max-width: 100%; height: auto; display: block; }
+#qrBackupCode                      { user-select: all; }
+#qrCountdownBar                    { transition: width 1s linear; }
+
+/* ---- Live scan feed (right column of the modal) ---- */
+#qrScansList .list-group-item      { border-color: rgba(0,0,0,.05); }
+#qrScansList .qr-scan-fresh        {
+    background: linear-gradient(90deg, rgba(34,197,94,.14) 0%, transparent 80%);
+    animation: qrScanFlash 1.6s ease-out 1;
+}
+@keyframes qrScanFlash {
+    0%   { background-color: rgba(34,197,94,.35); }
+    100% { background-color: transparent; }
+}
+.qr-avatar {
+    width: 34px; height: 34px; border-radius: 50%;
+    background: linear-gradient(135deg,#3b82f6 0%,#0ea5e9 100%);
+    color: #fff; font-weight: 700; font-size: 14px;
+    display: inline-flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+}
+
+/* ---- Fullscreen: when the modal body is presented fullscreen, upscale QR ---- */
+#qrLiveModalBody:fullscreen,
+#qrLiveModalBody:-webkit-full-screen {
+    background: #ffffff;
+    padding: 40px;
+    overflow: auto;
+}
+#qrLiveModalBody:fullscreen #qrCanvasBox {
+    min-width: 420px; min-height: 420px;
+}
+#qrLiveModalBody:fullscreen #qrBackupCode {
+    font-size: 5rem !important;
+}
+
+/* ---- Student scan page ---- */
+#qrVideo               { object-fit: cover; }
+#cameraPlaceholder     { background: linear-gradient(180deg,#f8fafc 0%,#eef2ff 100%); border-radius: 12px; }
+#manualToken           { letter-spacing: .35rem; font-family: 'Courier New', monospace; text-align: center; font-weight: 700; }
+
+/* ---- Student dashboard: QR quick-action tile ---- */
+.qr-quick-action-tile {
+    background: linear-gradient(135deg,#0ea5e9 0%,#6366f1 60%,#8b5cf6 100%);
+    color: #fff;
+    border-radius: 14px;
+    padding: 18px 22px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    box-shadow: 0 10px 25px -8px rgba(99,102,241,.45);
+    text-decoration: none;
+    transition: transform .2s ease, box-shadow .2s ease;
+}
+.qr-quick-action-tile:hover {
+    color: #fff; transform: translateY(-2px);
+    box-shadow: 0 14px 32px -8px rgba(99,102,241,.55);
+}
+.qr-quick-action-tile .qr-qa-icon {
+    width: 54px; height: 54px; border-radius: 12px;
+    background: rgba(255,255,255,.18);
+    display: inline-flex; align-items: center; justify-content: center;
+    font-size: 26px; flex-shrink: 0;
+}
+.qr-quick-action-tile .qr-qa-title    { font-weight: 700; font-size: 1.05rem; margin: 0; }
+.qr-quick-action-tile .qr-qa-sub      { opacity: .9; font-size: .82rem; margin: 2px 0 0; }
+.qr-quick-action-tile .qr-qa-cta      {
+    margin-left: auto;
+    background: rgba(255,255,255,.2);
+    padding: 6px 12px; border-radius: 999px;
+    font-size: .78rem; font-weight: 600;
+    white-space: nowrap;
+}
+
+/* ---- Print-only sheet (used by the teacher's Print button) ---- */
+@media print {
+    body.qr-print-mode > *:not(#qrPrintSheet) { display: none !important; }
+    body.qr-print-mode #qrPrintSheet          { display: block !important; }
+    #qrPrintSheet                             { padding: 20px; }
+    #qrPrintSheet #qrPrintCanvas img,
+    #qrPrintSheet #qrPrintCanvas canvas       { max-width: 320px; height: auto; }
+}
+
+/* ---- Small utility: RTL safety for the copy button + backup code ---- */
+html[dir="rtl"] #qrBackupCode  { direction: ltr; unicode-bidi: bidi-override; }
+html[dir="rtl"] #manualToken   { direction: ltr; }
